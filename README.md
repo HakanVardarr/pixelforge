@@ -20,8 +20,8 @@ The roadmap outlines the development milestones for PixelForge. This project foc
 
 ### Phase 1: Setup and Basics
 - [x] Set up the Rust project with `minifb` for window and framebuffer management.
-- [ ] Implement basic pixel plotting to display individual pixels on the screen.
-- [ ] Add functionality to clear and refresh the screen.
+- [x] Implement basic pixel plotting to display individual pixels on the screen.
+- [x] Add functionality to clear and refresh the screen.
 
 ### Phase 2: 2D Rendering
 - [ ] Implement line drawing using Bresenham's algorithm.
