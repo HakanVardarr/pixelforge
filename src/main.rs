@@ -1,22 +1,25 @@
-use minifb::{Key, KeyRepeat, Window, WindowOptions};
+use minifb::{Key, KeyRepeat, WindowOptions};
+use pixelforge::buffer::Buffer;
+use pixelforge::color::rgb_from_u8;
 
 const WIDTH: usize = 800;
 const HEIGHT: usize = 600;
 
 fn main() {
-    let mut buffer = [rgb(0, 0, 0); WIDTH * HEIGHT];
-    for row in 0..HEIGHT {
-        for col in 0..WIDTH {
-            let r = ((row as f32 / HEIGHT as f32) * 255.0) as u8;
-            let g = ((col as f32 / WIDTH as f32) * 255.0) as u8;
+    let mut buffer = Buffer::new(WIDTH, HEIGHT);
+    for y in 0..HEIGHT {
+        for x in 0..WIDTH {
+            let r = ((y as f32 / HEIGHT as f32) * 255.0) as u8;
+            let g = ((x as f32 / WIDTH as f32) * 255.0) as u8;
             let b = 0u8;
 
-            buffer[row * WIDTH + col] = rgb(r, g, b);
+            buffer.set_pixel(x, y, rgb_from_u8(r, g, b)).unwrap();
         }
     }
 
-    let mut window = Window::new("Software Renderer", WIDTH, HEIGHT, WindowOptions::default())
-        .expect("Failed to create window!");
+    let mut window =
+        minifb::Window::new("Software Renderer", WIDTH, HEIGHT, WindowOptions::default())
+            .expect("Failed to create window!");
 
     'main_loop: while window.is_open() {
         for key in window.get_keys_pressed(KeyRepeat::No) {
@@ -26,11 +29,8 @@ fn main() {
             }
         }
 
-        window.update_with_buffer(&buffer, WIDTH, HEIGHT).unwrap();
+        window
+            .update_with_buffer(buffer.as_bytes(), WIDTH, HEIGHT)
+            .unwrap();
     }
-}
-
-fn rgb(r: u8, g: u8, b: u8) -> u32 {
-    let (r, g, b) = (r as u32, g as u32, b as u32);
-    (r << 16) | (g << 8) | b
 }
